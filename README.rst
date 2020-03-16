@@ -15,10 +15,8 @@ However, the results do not seem to make sense (yet).
 Data
 ---------
 
-UN Census data for age demographics:
-* http://data.un.org/Data.aspx?d=POP&f=tableCode%3a22
+* UN Census data for age demographics: http://data.un.org/Data.aspx?d=POP&f=tableCode%3a22
 
-COVID-19 time series:
-* https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/
+* COVID-19 time series: https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/
 
 
