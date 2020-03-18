@@ -67,6 +67,7 @@ ax = a.gca()
 b = plt.figure(figsize=(7, 8))
 bx = b.gca()
 
+min_dead = 6
 
 print("per-country extraction:")
 print()
@@ -106,7 +107,6 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 	
 	timeseries_cases = timeseries_reported - timeseries_recovered
 	
-	min_dead = 4
 	mask = timeseries_dead >= min_dead
 	#mask = np.logical_and(timeseries_dead >= 3, timeseries_reported / vulnerable_number.sum() > 1e-5)
 	x = timeseries_cases[mask] / vulnerable_number.sum()
@@ -150,13 +150,13 @@ ax.text(0.02, 0.98, """How to read this graph:
 The horizontal axis represents penetration of the population.
 The vertical axis indicates under-reporting of infections
 (compare to Diamond Princess and South Korea).
-Deaths (rare!), but occur after a delay. For example, in China and 
+Deaths (rare!) occur after a delay. For example, in China and 
 South Korea, deaths keep increasing after no new infections.
 
 Definitions:
-Vulnerable population: Country demographics age groups multiplied 
+Vulnerable population = Country demographics age groups multiplied 
 by their relative mortality (taken from Riou et al. 2020).
-# of infected: Confirmed cases - Recovered cases
+# of infected = confirmed cases - recovered cases
 """, va='top', ha='left', transform=ax.transAxes)
 plt.xlabel('# of Infected / Vulnerable Population')
 plt.ylabel('# of Deaths / # of Confirmed cases')
@@ -178,13 +178,13 @@ bx.text(0.02, 0.98, """How to read this graph:
 The horizontal axis represents penetration of the population.
 The vertical axis indicates under-reporting of infections
 (compare to Diamond Princess and South Korea).
-Deaths (rare!), but occur after a delay. For example, in China and 
+Deaths (rare!) occur after a delay. For example, in China and 
 South Korea, deaths keep increasing after no new infections.
 
 Definitions:
-Vulnerable population: Country demographic age groups multiplied 
+Vulnerable population = Country demographic age groups multiplied 
 by their relative mortality (taken from Riou et al. 2020).
-# of infected: confirmed cases - recovered cases
+# of infected = confirmed cases - recovered cases
 """, va='top', ha='left', transform=bx.transAxes)
 plt.xlabel('# of Infected / Vulnerable Population / # hospital beds per 10,000 people')
 plt.ylabel('# of Deaths / # of Confirmed cases')
