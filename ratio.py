@@ -164,7 +164,6 @@ The vertical axis indicates under-reporting of infections
 (compare to Diamond Princess and South Korea).
 Deaths (rare!) occur after a delay. For example, in China and 
 South Korea, deaths keep increasing after no new infections.
-The horizontal axis represents stress on the health care system.
 
 Definitions:
 Vulnerable population = Country demographic age groups multiplied 
@@ -194,19 +193,19 @@ bx.text(0.98, 0.98, "@JohannesBuchner (non-expert)", va='top', ha='right',
 	transform=bx.transAxes, size=8, color="gray")
 
 bx.text(0.02, 1.0, """How to read this graph:
+The horizontal axis represents stress on the health care system.
 The vertical axis indicates under-reporting of infections
 (compare to Diamond Princess and South Korea).
 Deaths (rare!) occur after a delay. For example, in China and 
 South Korea, deaths keep increasing after no new infections.
-The horizontal axis represents stress on the health care system.
 
 Definitions:
 Vulnerable population = Country demographic age groups multiplied 
 by their relative mortality (taken from Riou et al. 2020).
 # of infected = confirmed cases - recovered cases
 """, va='bottom', ha='left', transform=bx.transAxes, size=10)
-plt.xlabel("# of Infected / Vulnerable Population / # hospital beds per person\n\nHealth care system stress $\\rightarrow$")
-plt.ylabel('reported mortality $\\rightarrow$\n\n# of Deaths / # of Confirmed cases')
+plt.xlabel("# of Infected / Vulnerable Population / # hospital beds per person")
+plt.ylabel('# of Deaths / # of Confirmed cases')
 plt.xscale('log')
 plt.yscale('log')
 plt.xticks([1e-2, 1e-1, 1], ['1%', '10%', '100%'])
