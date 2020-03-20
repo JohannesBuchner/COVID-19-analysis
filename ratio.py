@@ -61,13 +61,13 @@ plt.close()
 
 print("loading population data...")
 pop = pandas.concat([
-	pandas.read_csv('UNdata_Export_20200316_150200133.csv.gz'),
-	pandas.read_csv('UNdata_Export_20200316_150838749.csv.gz'),
-	pandas.read_csv('UNdata_Export_20200316_151648629.csv.gz'),
-	pandas.read_csv('UNdata_Export_20200316_152402097.csv.gz'),
+	pandas.read_csv('UNdata/UNdata_Export_20200316_150200133.csv.gz'),
+	pandas.read_csv('UNdata/UNdata_Export_20200316_150838749.csv.gz'),
+	pandas.read_csv('UNdata/UNdata_Export_20200316_151648629.csv.gz'),
+	pandas.read_csv('UNdata/UNdata_Export_20200316_152402097.csv.gz'),
 	])
 
-beds = pandas.read_csv('UNdata_Export_hospitalbeds.csv')
+beds = pandas.read_csv('UNdata/UNdata_Export_hospitalbeds.csv')
 
 prop_cycle = plt.rcParams['axes.prop_cycle']
 colors = prop_cycle.by_key()['color'] * 100
