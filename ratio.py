@@ -72,7 +72,7 @@ beds = pandas.read_csv('UNdata/UNdata_Export_hospitalbeds.csv')
 prop_cycle = plt.rcParams['axes.prop_cycle']
 colors = prop_cycle.by_key()['color'] * 100
 
-marked_countries = ['Japan', 'China', 'South Korea', 'US', 'Iran', 'Italy', 'Spain', 'France', 'UK']
+marked_countries = ['Japan', 'China', 'South Korea', 'US', 'Iran', 'Italy', 'Spain', 'France', 'UK', 'Germany']
 #marked_countries = ['US', 'Germany', 'Japan', 'Italy', 'Korea, South', 'Iran']
 #marked_countries_colors = {'US':'red', 'Japan':'brown', 'Italy':'green', 
 #	'Korea, South':'black', 'Iran':'blue', 'France':'lime', 'China':'pink',
@@ -90,6 +90,8 @@ use_all_countries = os.environ.get('COUNTRIES', 'all') == 'all'
 atexts = []
 btexts = []
 #min_dead = 4
+min_series = 10
+min_series = 7
 
 print("per-country extraction:")
 print()
@@ -153,7 +155,7 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 	x = timeseries_cases[mask] / vulnerable_number.sum()
 	y = timeseries_dead[mask] / timeseries_reported[mask]
 	marker = 'o-' if country_brief in marked_countries else 's-'
-	size = 8 if mask.sum() > 10 else 4
+	size = 8 if mask.sum() > min_series else 4
 	if mask.any():
 		l, = ax.plot(x[-1], y[-1], marker, ms=size, color=color)
 		atexts.append(ax.text(x[-1], y[-1], country_brief, va='bottom', ha='left', size=8))
@@ -171,7 +173,7 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 	if mask.any():
 		l, = bx.plot(x[-1], y[-1], marker, ms=size, color=color)
 		btexts.append(bx.text(x[-1], y[-1], country_brief, va='bottom', ha='left', size=8))
-		if mask.sum() > 10 or country_brief in marked_countries:
+		if mask.sum() > min_series or country_brief in marked_countries:
 			bx.plot(x, y, marker, ms=2, label=country_brief, alpha=0.2, color=l.get_color())
 	
 	else:
@@ -250,6 +252,9 @@ plt.hlines(7/712, 1e-3, 8, linestyles=['--'], color='gray')
 plt.text(8, 7/712, 'Diamond Princess', ha='right', va='bottom', size=6)
 plt.ylim(1e-3, 0.2)
 plt.xlim(1e-3, 8)
+bx.fill_between([1.0, 8], [1e-3, 1e-3], [0.2, 0.2], color='yellow', alpha=0.05)
+bx.fill_between([1.2, 8], [1e-3, 1e-3], [0.2, 0.2], color='yellow', alpha=0.05)
+bx.fill_between([1.2**2, 8], [1e-3, 1e-3], [0.2, 0.2], color='yellow', alpha=0.05)
 adjust_text(btexts)
 #plt.legend(loc='best', ncol=3, prop=dict(size=8))
 if use_all_countries:
