@@ -209,11 +209,14 @@ The number of vulnerable people is computed based on published mortality factors
 How to read this
 -----------------
 
-To compare with the current status, subtract the number infected by the number recovered.
-This gives you information of how stressed the health system is.
+*To find out how stressed the health system of a country is*:
 
-(From doubling times, you can also extrapolate in how many days
-the health system will become insufficient).
+Compare the capacity with the current status, by subtracting the number infected by the number recovered.
+
+*To predict when a health system will become insufficient*:
+
+From doubling times, extrapolate in how many days
+the capacity will be reached.
 
 Top stressed countries
 -----------------------
