@@ -2,8 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from adjustText import adjust_text
+from numpy import log, exp
+import locale
+
+locale.setlocale(locale.LC_ALL, "en_US.utf8")
 
 print("loading COVID-19 data...")
 f1 = 'time_series_19-covid-Confirmed.csv'
@@ -90,18 +94,22 @@ use_all_countries = os.environ.get('COUNTRIES', 'all') == 'all'
 atexts = []
 btexts = []
 capacities = []
+predictions = []
 #min_dead = 4
 min_series = 10
 min_series = 7
+
+dates = [datetime.strptime(c, "%m/%d/%y").date() for c in d1.columns[2:]]
 
 print("per-country extraction:")
 print()
 print("%20s %4s %6s %14s %s" % ("Country", "Beds", "Deaths", "Population", "Vulnerable fraction"))
 #for rows1, rows2 in zip(open(f1), open(f2)):
 for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iterrows()):
-	timeseries_reported = np.array(row1[4:], dtype=int)
-	timeseries_dead = np.array(row2[4:], dtype=int)
-	timeseries_recovered = np.array(row3[4:], dtype=int)
+	
+	timeseries_reported = np.array(row1[2:], dtype=int)
+	timeseries_dead = np.array(row2[2:], dtype=int)
+	timeseries_recovered = np.array(row3[2:], dtype=int)
 	country = row1.name
 	pop_country = pop[pop["Country or Area"] == country_name_replacement.get(row1.name, row1.name)]
 	if len(pop_country) == 0: # or pop_country.Year.dtype.char == 'O':
@@ -138,8 +146,58 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 		sum(num_people), sum(vulnerable_number) * 100 / sum(num_people)))
 	#print("%20s %9d" % (country, beds_recent * sum(vulnerable_number)))
 	#capacities.append("| %20s | %9d |" % (country, beds_recent * sum(vulnerable_number)))
+	
 	if beds_recent > 0 and sum(vulnerable_number) > 100000:
 		capacities.append(((timeseries_reported - timeseries_recovered)[-1] / capacity, country_brief, capacity))
+		
+		if country_brief in marked_countries_colors or use_all_countries:
+			plt.figure()
+			plt.title(country)
+			plt.plot(timeseries_reported - timeseries_recovered, 'o-')
+			lo, hi = 0, len(timeseries_reported) + 21
+			x = np.arange(len(timeseries_reported) - 7, hi)
+			logy_data = log(timeseries_reported - timeseries_recovered)
+			i0 = len(timeseries_reported) - 1
+			x0 = i0
+			logy0 = logy_data[i0]
+			
+			logload = log(timeseries_reported - timeseries_recovered)[-4:][::-1]
+			
+			if (timeseries_reported - timeseries_recovered >= capacity).any():
+				# already passed limit once
+				xmid = np.where(timeseries_reported - timeseries_recovered >= capacity)[0].min()
+				predictions.append((xmid, xmid, xmid, country_brief))
+			elif (logload > 0).all():
+				plt.text(x0, exp(logy0), dates[-1], ha='right', va='bottom')
+				logloadmid = -np.median(logload[1:] - logload[:-1])
+				logloadmax = -np.max(logload[1:] - logload[:-1])
+				logloadmin = -np.min(logload[1:] - logload[:-1])
+				#logloadmid, logloadmax, logloadmin = 0, 0, 0
+				plt.plot(x, exp(logy0 + (x - x0) * logloadmid), '--', alpha=0.5, color='gray')
+				plt.plot(x, exp(logy0 + (x - x0) * logloadmin), ':', alpha=0.5, color='gray')
+				plt.plot(x, exp(logy0 + (x - x0) * logloadmax), ':', alpha=0.5, color='gray')
+				if exp(logy0) < capacity:
+					maskmid = exp(logy0 + (x - x0) * logloadmid) > capacity
+					maskmin = exp(logy0 + (x - x0) * logloadmin) > capacity
+					maskmax = exp(logy0 + (x - x0) * logloadmax) > capacity
+					xmid = x[maskmid].min() if maskmid.any() else hi
+					xmin = x[maskmin].min() if maskmin.any() else hi
+					xmax = x[maskmax].min() if maskmax.any() else hi
+				
+					plt.vlines(xmid, 1, capacity, color='gray', alpha=0.2)
+					plt.vlines(xmin, 1, capacity, color='gray', alpha=0.2)
+					plt.vlines(xmax, 1, capacity, color='gray', alpha=0.2)
+					predictions.append((xmid, xmin, xmax, country_brief))
+			
+			plt.hlines(capacity, 0, hi)
+			plt.text(0, capacity, 'Health care system capacity', 
+				ha='left', va='bottom', size=8)
+			plt.ylim(1, capacity * 5)
+			plt.ylabel("Number of infected - recovered")
+			plt.xlabel("Time")
+			plt.yscale('log')
+			plt.savefig('results/%s.png' % country_brief)
+			plt.close()
 	
 	if country_brief in marked_countries_colors:
 		color = marked_countries_colors[country_brief]
@@ -194,7 +252,7 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 		bx.text(timeseries_cases[-1] / capacity, 1e-3,
 			'  ' + country_brief, va='bottom', ha='center', size=6, rotation=90)
 
-with open("capacities.rst", 'w') as f:
+with open("results/capacities.rst", 'w') as f:
 	f.write("""
 =============================
 Health care system capacities
@@ -212,11 +270,6 @@ How to read this
 *To find out how stressed the health system of a country is*:
 
 Compare the capacity with the current status, by subtracting the number infected by the number recovered.
-
-*To predict when a health system will become insufficient*:
-
-From doubling times, extrapolate in how many days
-the capacity will be reached.
 
 Top stressed countries
 -----------------------
@@ -236,13 +289,31 @@ Top stressed countries
 Alphabetical
 -----------------------
 
-==================  ===========
- Country             Capacity 
-==================  ===========
+All countries.
+
+Here I also crudely predict when the health system will become insufficient. 
+This extrapolated from the day-to-day doubling times from the last 4 days.
+
+==================  ===========  ======================   ======
+ Country             Capacity     Predicted Exhaustion     Fit
+==================  ===========  ======================   ======
 """)
 	for stress, country, capacity in capacities:
-		f.write("%-15s   %10d\n" % (country[:15], capacity))
-	f.write("==================  ===========\n\n")
+		pred_country = [(xmid, xmin, xmax) for xmid, xmin, xmax, country_brief in predictions if country == country_brief]
+		if len(pred_country) > 0:
+			(xmid, xmin, xmax) = pred_country[0]
+			if xmid > 0 and xmid < hi:
+				f.write("%-15s   %10d      %s - %s          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/%s.pdf>`_\n" % (
+					country[:15], capacity, 
+					(dates[0] + timedelta(days=int(xmin))).strftime("%b %d"),
+					(dates[0] + timedelta(days=int(xmax))).strftime("%b %d"),
+					country,
+					))
+			else:
+				f.write("%-15s   %10d      \n" % (country[:15], capacity))
+		else:
+			f.write("%-15s   %10d      \n" % (country[:15], capacity))
+	f.write("==================  ===========  ======================   ======\n\n")
 
 
 plt.sca(ax)
@@ -277,11 +348,11 @@ plt.xlim(1e-5, 2e-2)
 adjust_text(atexts)
 #plt.legend(loc='best', ncol=3, prop=dict(size=8))
 if use_all_countries:
-	plt.savefig('ratio.pdf', bbox_inches='tight')
-	plt.savefig('ratio.png', bbox_inches='tight', dpi=120)
+	plt.savefig('results/ratio.pdf', bbox_inches='tight')
+	plt.savefig('results/ratio.png', bbox_inches='tight', dpi=120)
 else:
-	plt.savefig('ratio_some.pdf', bbox_inches='tight')
-	plt.savefig('ratio_some.png', bbox_inches='tight', dpi=120)
+	plt.savefig('results/ratio_some.pdf', bbox_inches='tight')
+	plt.savefig('results/ratio_some.png', bbox_inches='tight', dpi=120)
 plt.close()
 
 #plt.plot([1e-6, 1e-3], [5e-6/1e-6, 5e-6/1e-3], ':', color='gray', alpha=0.5)
@@ -321,9 +392,66 @@ bx.fill_between([1.2**2, 8], [1e-3, 1e-3], [0.2, 0.2], color='yellow', alpha=0.0
 adjust_text(btexts)
 #plt.legend(loc='best', ncol=3, prop=dict(size=8))
 if use_all_countries:
-	plt.savefig('ratio_beds.pdf', bbox_inches='tight')
-	plt.savefig('ratio_beds.png', bbox_inches='tight', dpi=120)
+	plt.savefig('results/ratio_beds.pdf', bbox_inches='tight')
+	plt.savefig('results/ratio_beds.png', bbox_inches='tight', dpi=120)
 else:
-	plt.savefig('ratio_beds_some.pdf', bbox_inches='tight')
-	plt.savefig('ratio_beds_some.png', bbox_inches='tight', dpi=120)
+	plt.savefig('results/ratio_beds_some.pdf', bbox_inches='tight')
+	plt.savefig('results/ratio_beds_some.png', bbox_inches='tight', dpi=120)
 plt.close()
+
+fig = plt.figure(figsize=(6, 13))
+ax = plt.gca()
+#fig.patch.set_visible(False)
+#ax.axis('off')
+ax.spines['right'].set_visible(False)
+#ax.spines['top'].set_visible(False)
+ax.spines['left'].set_visible(False)
+ax.spines['bottom'].set_visible(False)
+
+i = 0
+now = len(timeseries_reported)
+countries = []
+for xmid, xmin, xmax, country_brief in sorted(predictions, reverse=True):
+	if xmid < hi:
+		countries.append(country_brief.replace(' and ', '&').replace('Republic', 'Rep.'))
+		#dates[-1].date() + (xmid - len(timeseries_reported)):
+		plt.errorbar(y=i, x=xmid, xerr=[[xmid-xmin], [xmax-xmid]], 
+			color='k' if xmid > now else 'r',
+			capsize=4, marker='o', mfc=None)
+		if xmid > now:
+			plt.text(xmin, i, country_brief + '   ', ha='right', va='center')
+		else:
+			plt.text(xmin, i, '   ' + country_brief, ha='left', va='center')
+		i += 1
+ax.xaxis.tick_top()
+ax.xaxis.set_label_position('top') 
+plt.title("Prediction: when healthcare system limit is reached")
+plt.text(0, -0.02, """A person you infect today may need a hospital bed in 10-14 days. 
+But the hospitals may be crowded then. $\\rightarrow$ Delay the spread _now_.""", va='top',
+	transform=ax.transAxes)
+#plt.xlim(now, hi)
+plt.ylim(-0.5, i - 0.5)
+plt.vlines(now, -0.5, i - 0.5, color='gray', alpha=0.2)
+plt.vlines(now + 7, -0.5, i - 0.5, color='gray', alpha=0.2)
+plt.vlines(now + 14, -0.5, i - 0.5, color='gray', alpha=0.2)
+#plt.yticks(range(len(countries)), countries)
+plt.yticks([])
+
+lo, _ = plt.xlim()
+xticks = np.arange(lo-1, hi)
+plt.xlim(lo-1, hi)
+plt.xticks(xticks, [(dates[0] + timedelta(days=i)).strftime("%b %d") for i in xticks], rotation=90)
+#plt.xticks(np.arange(now, hi), np.arange(hi - now))
+#plt.text(-0, 1.01, "%s+X days:" % dates[-1], va='bottom', ha='left',
+#	transform=ax.transAxes)
+#plt.xticks([now, now+1, now+2, now+3, now+4, now+5, now+6, now+7, now+14, hi], [0, 1, 2, 3, 4, 5, 6, 7, '14', '+%d days' % (hi-now)])
+#plt.xlabel("Day after %s" % dates[-1])
+if use_all_countries:
+	plt.savefig('results/predictions.pdf', bbox_inches='tight')
+	plt.savefig('results/predictions.png', bbox_inches='tight', dpi=120)
+else:
+	plt.savefig('results/predictions_some.pdf', bbox_inches='tight')
+	plt.savefig('results/predictions_some.png', bbox_inches='tight', dpi=120)
+
+plt.close()
+

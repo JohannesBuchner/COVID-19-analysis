@@ -1,6 +1,8 @@
 COVID-19 toy analysis
 ============================
 
+* New analysis: https://github.com/JohannesBuchner/COVID-19-analysis/blob/master/results/capacities.rst
+
 Approach
 ---------
 
@@ -36,7 +38,7 @@ Data
 Results
 --------
 
-.. image:: https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/ratio_beds_some.png
+.. image:: https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/ratio_beds_some.png
 
 Discussion
 -----------
@@ -72,7 +74,7 @@ Things I notice / interpret (as a non-expert!):
 All countries
 --------------
 
-.. image:: https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/ratio_beds.png
+.. image:: https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/ratio_beds.png
 
 Things I notice / interpret (as a non-expert!):
 
