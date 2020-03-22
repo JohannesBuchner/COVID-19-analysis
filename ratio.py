@@ -89,6 +89,7 @@ bx = b.gca()
 use_all_countries = os.environ.get('COUNTRIES', 'all') == 'all'
 atexts = []
 btexts = []
+capacities = []
 #min_dead = 4
 min_series = 10
 min_series = 7
@@ -129,6 +130,10 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 	
 	print("%20s %6d %6d %14d %.2f%%" % (country, beds_recent, max(timeseries_dead), 
 		sum(num_people), sum(vulnerable_number) * 100 / sum(num_people)))
+	#print("%20s %9d" % (country, beds_recent * sum(vulnerable_number)))
+	#capacities.append("| %20s | %9d |" % (country, beds_recent * sum(vulnerable_number)))
+	if beds_recent > 0 and sum(vulnerable_number) > 100000:
+		capacities.append(((timeseries_reported - timeseries_recovered)[-1] / (beds_recent * sum(vulnerable_number)), country_brief, beds_recent * sum(vulnerable_number)))
 	
 	if country_brief in marked_countries_colors:
 		color = marked_countries_colors[country_brief]
@@ -142,14 +147,15 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 	min_dead = max(4,  1 * 2 * 100000 / sum(vulnerable_number))
 	
 	if timeseries_dead.max() < min_dead:
-		print("skipping", country, "not enough dead", timeseries_dead.max(), 1 * 2 * 100000 / sum(vulnerable_number))
+		#print("skipping", country, "not enough dead", timeseries_dead.max(), 1 * 2 * 100000 / sum(vulnerable_number))
 		continue
 	
 	timeseries_cases = timeseries_reported - timeseries_recovered
 	
 	mask = timeseries_dead >= min_dead
 	if not mask.any():
-		print("skipping", country, "not enough dead", timeseries_dead.max())
+		#print("skipping", country, "not enough dead", timeseries_dead.max())
+		pass
 	
 	#mask = np.logical_and(timeseries_dead >= 3, timeseries_reported / vulnerable_number.sum() > 1e-5)
 	x = timeseries_cases[mask] / vulnerable_number.sum()
@@ -181,6 +187,48 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 			marker, color=color, ms=2)
 		bx.text(timeseries_cases[-1] / vulnerable_number.sum() / beds_recent, 1e-3,
 			'  ' + country_brief, va='bottom', ha='center', size=6, rotation=90)
+
+with open("capacities.rst", 'w') as f:
+	f.write("""
+=============================
+Health care system capacities
+=============================
+
+Here, the number of infected a country can handle is listed.
+This is number of vulnerable people multiplied by the number of 
+available hospital beds per person. 
+Data comes from UN data compilations (age demographics and hospital bed data). 
+The number of vulnerable people is computed based on published mortality factors for age groups (Riou+2020).
+
+To compare with the current status, subtract the number infected by the number recovered.
+
+Top stressed countries
+-----------------------
+
+
++-----------------+------------+
+| Country         | Capacity   |
++-----------------+------------+
+""")
+	for stress, country, capacity in sorted(capacities, reverse=True):
+		if capacity > 100 and stress > 0.3:
+			f.write("| %-15s | %10d |\n" % (country, capacity))
+	f.write("+-----------------+------------+\n\n")
+
+	f.write("""
+
+Alphabetical
+-----------------------
+
++-----------------+------------+
+| Country         | Capacity   |
++-----------------+------------+
+""")
+	for stress, country, capacity in capacities:
+		#if capacity > 100 and stress > 0.1:
+		f.write("| %-15s | %10d |\n" % (country, capacity))
+	f.write("+-----------------+------------+\n\n")
+
 
 plt.sca(ax)
 ax.text(0.02, 1.0, """How to read this graph:
