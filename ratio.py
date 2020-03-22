@@ -291,7 +291,7 @@ bx.text(0.02, 1.0, """How to read this graph:
 The horizontal axis represents stress on the health care system.
 The vertical axis indicates under-reporting of infections
 (compare to Diamond Princess and South Korea).
-Deaths (rare!) occur afteJapan 	221225r a delay. For example, in China and 
+Deaths (rare!) occur after a delay. For example, in China and 
 South Korea, deaths keep increasing after no new infections.
 
 Definitions:
