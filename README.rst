@@ -7,12 +7,6 @@ COVID-19 analyses
 2. `How stressed is the health care system of each country? When will it be exhausted? 
    <https://github.com/JohannesBuchner/COVID-19-analysis/blob/master/results/capacities.rst>`_
 
-Code Usage
-------------
-
-::
-  LC_ALL=en_US.utf8 python ratio.py
-
 Approach
 ---------
 
