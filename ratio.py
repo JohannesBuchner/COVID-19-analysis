@@ -5,6 +5,7 @@ import os
 from datetime import datetime, timedelta
 from adjustText import adjust_text
 from numpy import log, exp
+import urllib
 import locale
 
 locale.setlocale(locale.LC_ALL, "en_US.utf8")
@@ -304,11 +305,11 @@ This extrapolated from the day-to-day doubling times from the last 4 days.
 		if len(pred_country) > 0:
 			(xmid, xmin, xmax) = pred_country[0]
 			if xmid > 0 and xmid < hi:
-				f.write("%-15s   %10d      %s - %s          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/%s.png>`_\n" % (
+				f.write("%-15s   %10d      %s - %s          `Trend <%s>`_\n" % (
 					country[:15], capacity, 
 					(dates[0] + timedelta(days=int(xmin))).strftime("%b %d"),
 					(dates[0] + timedelta(days=int(xmax))).strftime("%b %d"),
-					country,
+					urllib.parse.quote('https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/%s.png' % country),
 					))
 			else:
 				f.write("%-15s   %10d      \n" % (country[:15], capacity))
