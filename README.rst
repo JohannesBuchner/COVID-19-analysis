@@ -1,13 +1,23 @@
-COVID-19 toy analysis
+COVID-19 analyses
 ============================
 
-* New analysis: https://github.com/JohannesBuchner/COVID-19-analysis/blob/master/results/capacities.rst
+
+1. How do countries compare in testing and health care system stress? (see below)
+
+2. `How stressed is the health care system of each country? When will it be exhausted? 
+   <https://github.com/JohannesBuchner/COVID-19-analysis/blob/master/results/capacities.rst>`_
+
+Code Usage
+------------
+
+::
+  LC_ALL=en_US.utf8 python ratio.py
 
 Approach
 ---------
 
 The number of confirmed cases depends strongly on the testing approach
-taken by each country's government. 
+taken by each country's government.
 
 Firstly, I was interested whether one can infer the underlying infected population
 based on the number of deaths. For that I simply take the 
