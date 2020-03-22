@@ -124,16 +124,22 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 	
 	year = pandas.to_numeric(pop_country.Year)
 	country_recent = pop_country[year == year.max()]
+	# total number of people in each age group
 	num_people = [country_recent[country_recent.Age.isin(ages)].Value.sum()
 		for ages in agegroups]
+	# corrected for vulnerability
 	vulnerable_number = np.array(num_people) * agegroups_mortality
+	# number of hospital beds available in the country
+	beds_total = beds_recent * sum(num_people)
+	# corrected for vulnerability of the population
+	capacity = beds_total * sum(vulnerable_number) / sum(num_people)
 	
 	print("%20s %6d %6d %14d %.2f%%" % (country, beds_recent, max(timeseries_dead), 
 		sum(num_people), sum(vulnerable_number) * 100 / sum(num_people)))
 	#print("%20s %9d" % (country, beds_recent * sum(vulnerable_number)))
 	#capacities.append("| %20s | %9d |" % (country, beds_recent * sum(vulnerable_number)))
 	if beds_recent > 0 and sum(vulnerable_number) > 100000:
-		capacities.append(((timeseries_reported - timeseries_recovered)[-1] / (beds_recent * sum(vulnerable_number)), country_brief, beds_recent * sum(vulnerable_number)))
+		capacities.append(((timeseries_reported - timeseries_recovered)[-1] / capacity, country_brief, capacity))
 	
 	if country_brief in marked_countries_colors:
 		color = marked_countries_colors[country_brief]
@@ -174,7 +180,7 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 		ax.text(timeseries_cases[-1] / vulnerable_number.sum(), 1e-3,
 			'  ' + country_brief, va='bottom', ha='center', size=6, rotation=90)
 
-	x = timeseries_cases[mask] / vulnerable_number.sum() / beds_recent
+	x = timeseries_cases[mask] / capacity
 	y = timeseries_dead[mask] / timeseries_reported[mask]
 	if mask.any():
 		l, = bx.plot(x[-1], y[-1], marker, ms=size, color=color)
@@ -183,9 +189,9 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 			bx.plot(x, y, marker, ms=2, label=country_brief, alpha=0.2, color=l.get_color())
 	
 	else:
-		bx.plot(timeseries_cases[-1] / vulnerable_number.sum() / beds_recent, 1e-3,
+		bx.plot(timeseries_cases[-1] / capacity, 1e-3,
 			marker, color=color, ms=2)
-		bx.text(timeseries_cases[-1] / vulnerable_number.sum() / beds_recent, 1e-3,
+		bx.text(timeseries_cases[-1] / capacity, 1e-3,
 			'  ' + country_brief, va='bottom', ha='center', size=6, rotation=90)
 
 with open("capacities.rst", 'w') as f:
@@ -285,7 +291,7 @@ bx.text(0.02, 1.0, """How to read this graph:
 The horizontal axis represents stress on the health care system.
 The vertical axis indicates under-reporting of infections
 (compare to Diamond Princess and South Korea).
-Deaths (rare!) occur after a delay. For example, in China and 
+Deaths (rare!) occur afteJapan 	221225r a delay. For example, in China and 
 South Korea, deaths keep increasing after no new infections.
 
 Definitions:
