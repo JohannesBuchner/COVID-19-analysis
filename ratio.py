@@ -190,11 +190,12 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 					predictions.append((xmid, xmin, xmax, country_brief))
 			
 			plt.hlines(capacity, 0, hi)
-			plt.text(0, capacity, 'Health care system capacity', 
+			plt.text(0, capacity, '  Health care system capacity', 
 				ha='left', va='bottom', size=8)
 			plt.ylim(1, capacity * 5)
+			plt.xlim(0, None)
 			plt.ylabel("Number of infected - recovered")
-			plt.xlabel("Time")
+			plt.xlabel("Days since %s" % (dates[0]).strftime('%Y-%m-%d'))
 			plt.yscale('log')
 			plt.savefig('results/%s.png' % country_brief)
 			plt.close()
