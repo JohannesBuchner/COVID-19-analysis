@@ -309,7 +309,7 @@ This extrapolated from the day-to-day doubling times from the last 4 days.
 					country[:15], capacity, 
 					(dates[0] + timedelta(days=int(xmin))).strftime("%b %d"),
 					(dates[0] + timedelta(days=int(xmax))).strftime("%b %d"),
-					urllib.parse.quote('https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/%s.png' % country),
+					'https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/' + urllib.parse.quote('%s.png' % country),
 					))
 			else:
 				f.write("%-15s   %10d      \n" % (country[:15], capacity))
