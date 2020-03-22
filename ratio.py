@@ -200,7 +200,14 @@ available hospital beds per person.
 Data comes from UN data compilations (age demographics and hospital bed data). 
 The number of vulnerable people is computed based on published mortality factors for age groups (Riou+2020).
 
+How to read this
+-----------------
+
 To compare with the current status, subtract the number infected by the number recovered.
+This gives you information of how stressed the health system is.
+
+(From doubling times, you can also extrapolate in how many days
+the health system will become insufficient).
 
 Top stressed countries
 -----------------------
