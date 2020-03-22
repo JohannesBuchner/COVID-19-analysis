@@ -314,8 +314,18 @@ This extrapolated from the day-to-day doubling times from the last 4 days.
 				f.write("%-15s   %10d      \n" % (country[:15], capacity))
 		else:
 			f.write("%-15s   %10d      \n" % (country[:15], capacity))
-	f.write("==================  ===========  ======================   ======\n\n")
+	f.write("""==================  ===========  ======================   ======
 
+Visualisation
+--------------
+
+Error bars indicate the crude range (under aforementioned simple extrapolation)
+when the health system resources will be exhausted.
+
+.. image:: https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/predictions.png
+
+
+""")
 
 plt.sca(ax)
 ax.text(0.02, 1.0, """How to read this graph:

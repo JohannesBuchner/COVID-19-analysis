@@ -169,3 +169,12 @@ Zambia                   434
 Zimbabwe                 380      
 ==================  ===========  ======================   ======
 
+Visualisation
+--------------
+
+Error bars indicate the crude range (under aforementioned simple extrapolation)
+when the health system resources will be exhausted.
+
+.. image:: https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/predictions.png
+
+
