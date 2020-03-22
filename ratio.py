@@ -206,28 +206,27 @@ Top stressed countries
 -----------------------
 
 
-+-----------------+------------+
-| Country         | Capacity   |
-+-----------------+------------+
+==================  ===========
+ Country             Capacity 
+==================  ===========
 """)
 	for stress, country, capacity in sorted(capacities, reverse=True):
 		if capacity > 100 and stress > 0.3:
-			f.write("| %-15s | %10d |\n" % (country, capacity))
-	f.write("+-----------------+------------+\n\n")
+			f.write("%-15s   %10d\n" % (country, capacity))
+	f.write("==================  ===========\n\n")
 
 	f.write("""
 
 Alphabetical
 -----------------------
 
-+-----------------+------------+
-| Country         | Capacity   |
-+-----------------+------------+
+==================  ===========
+ Country             Capacity 
+==================  ===========
 """)
 	for stress, country, capacity in capacities:
-		#if capacity > 100 and stress > 0.1:
-		f.write("| %-15s | %10d |\n" % (country, capacity))
-	f.write("+-----------------+------------+\n\n")
+		f.write("%-15s   %10d\n" % (country[:15], capacity))
+	f.write("==================  ===========\n\n")
 
 
 plt.sca(ax)
