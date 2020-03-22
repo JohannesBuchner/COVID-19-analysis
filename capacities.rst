@@ -36,7 +36,7 @@ Top stressed countries
 | Belgium         |       7042 |
 | Uruguay         |        306 |
 | Panama          |        455 |
-
++-----------------+------------+
 
 
 
@@ -149,5 +149,5 @@ Alphabetical
 | Vietnam         |      13222 |
 | Zambia          |        434 |
 | Zimbabwe        |        380 |
-
++-----------------+------------+
 
