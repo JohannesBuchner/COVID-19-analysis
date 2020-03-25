@@ -233,6 +233,8 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 	#mask = np.logical_and(timeseries_dead >= 3, timeseries_reported / vulnerable_number.sum() > 1e-5)
 	x = timeseries_cases[mask] / vulnerable_number.sum()
 	y = timeseries_dead[mask] / timeseries_reported[mask]
+	if not (x>0).all() or not (y>0).all():
+		print("POTENTIAL DATA ISSUE:", x, y)
 	marker = 'o-' if country_brief in marked_countries else 's-'
 	size = 8 if mask.sum() > min_series else 4
 	if mask.any():
@@ -362,9 +364,10 @@ plt.xticks([1e-4, 1e-3, 1e-2], ['0.01%', '0.1%', '1%'])
 plt.yticks([1e-3, 1e-2, 1e-1, 1], ['0.1%', '1%', '10%', '100%'])
 plt.hlines(7/712, 1e-5, 2e-2, linestyles=['--'], color='gray')
 plt.text(2e-2, 7/712, 'Diamond Princess', ha='right', va='bottom', size=6)
-adjust_text(atexts)
 plt.ylim(1e-3, 0.2)
 plt.xlim(1e-5, 2e-2)
+#ax.update_datalim(list(zip(plt.xlim(), plt.ylim())))
+#adjust_text(atexts)
 #plt.legend(loc='best', ncol=3, prop=dict(size=8))
 if use_all_countries:
 	plt.savefig('results/ratio.pdf', bbox_inches='tight')

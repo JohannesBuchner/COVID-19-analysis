@@ -19,7 +19,7 @@ number of deaths reported and divide by the number of infected reported
 to compare countries. This is the y-axis.
 
 Secondly, I was interested how well health care systems can cope.
-I place the number of currently infected relative to an estimate of the health care
+I place the number of currently* infected relative to an estimate of the health care
 system capacity. This is basically the number of hospital beds compared
 to the number of elderly people. I incorporated the
 population demographics (age distribution of each country),
@@ -30,6 +30,11 @@ health care system is on the x-axis.
 
 I exclude countries with a small number of deaths relative to
 their population size, because these do not give stable estimates.
+
+* update: Because the number of recovered is not reported anymore,
+   currently infected is estimated from the number of reported infections
+   14 days earlier, and crudely assuming those that have not died have 
+   recovered.
 
 Data
 ---------
