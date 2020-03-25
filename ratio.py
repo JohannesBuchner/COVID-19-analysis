@@ -11,15 +11,15 @@ import locale
 locale.setlocale(locale.LC_ALL, "en_US.utf8")
 
 print("loading COVID-19 data...")
-f1 = 'time_series_19-covid-Confirmed.csv'
-f2 = 'time_series_19-covid-Deaths.csv'
-f3 = 'time_series_19-covid-Recovered.csv'
+f1 = 'time_series_covid19_confirmed_global.csv'
+f2 = 'time_series_covid19_deaths_global.csv'
+#f3 = 'time_series_19-covid-Recovered.csv'
 d1 = pandas.read_csv(f1)
 d2 = pandas.read_csv(f2)
-d3 = pandas.read_csv(f3)
+#d3 = pandas.read_csv(f3)
 d1 = d1.groupby('Country/Region').sum()
 d2 = d2.groupby('Country/Region').sum()
-d3 = d3.groupby('Country/Region').sum()
+#d3 = d3.groupby('Country/Region').sum()
 
 country_name_replacement = {
 	"United Arab Emirates": "",
@@ -106,11 +106,18 @@ print("per-country extraction:")
 print()
 print("%20s %4s %6s %14s %s" % ("Country", "Beds", "Deaths", "Population", "Vulnerable fraction"))
 #for rows1, rows2 in zip(open(f1), open(f2)):
-for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iterrows()):
+for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 	
 	timeseries_reported = np.array(row1[2:], dtype=int)
 	timeseries_dead = np.array(row2[2:], dtype=int)
-	timeseries_recovered = np.array(row3[2:], dtype=int)
+	#timeseries_recovered = np.array(row3[2:], dtype=int)
+	
+	# assume that old reported cases have recovered after 14 days
+	#   subtract dead, as they obviously did not recover
+	timeseries_recovered = timeseries_reported * 0 + timeseries_reported[-14] - timeseries_dead[-1]
+	timeseries_recovered[14:] = timeseries_reported[:-14] - timeseries_dead[14:]
+	timeseries_recovered[timeseries_recovered < 0] = 0
+	
 	country = row1.name
 	pop_country = pop[pop["Country or Area"] == country_name_replacement.get(row1.name, row1.name)]
 	if len(pop_country) == 0: # or pop_country.Year.dtype.char == 'O':
@@ -143,7 +150,7 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 	# corrected for vulnerability of the population
 	capacity = beds_total * sum(vulnerable_number) / sum(num_people)
 	
-	print("%20s %6d %6d %14d %.2f%%" % (country, beds_recent, max(timeseries_dead), 
+	print("%20s %6d %6d %14d %.2f%%" % (country, beds_recent * 100000, max(timeseries_dead), 
 		sum(num_people), sum(vulnerable_number) * 100 / sum(num_people)))
 	#print("%20s %9d" % (country, beds_recent * sum(vulnerable_number)))
 	#capacities.append("| %20s | %9d |" % (country, beds_recent * sum(vulnerable_number)))
@@ -157,12 +164,12 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 			plt.plot(timeseries_reported - timeseries_recovered, 'o-')
 			lo, hi = 0, len(timeseries_reported) + 21
 			x = np.arange(len(timeseries_reported) - 7, hi)
-			logy_data = log(timeseries_reported - timeseries_recovered)
+			logy_data = log(timeseries_reported - timeseries_recovered + 0.01)
 			i0 = len(timeseries_reported) - 1
 			x0 = i0
 			logy0 = logy_data[i0]
 			
-			logload = log(timeseries_reported - timeseries_recovered)[-4:][::-1]
+			logload = logy_data[-4:][::-1]
 			
 			if (timeseries_reported - timeseries_recovered >= capacity).any():
 				# already passed limit once
@@ -218,7 +225,7 @@ for (i, row1), (_, row2), (_, row3) in zip(d1.iterrows(), d2.iterrows(), d3.iter
 	
 	timeseries_cases = timeseries_reported - timeseries_recovered
 	
-	mask = timeseries_dead >= min_dead
+	mask = np.logical_and(timeseries_dead >= min_dead, timeseries_cases > 0)
 	if not mask.any():
 		#print("skipping", country, "not enough dead", timeseries_dead.max())
 		pass
@@ -355,9 +362,9 @@ plt.xticks([1e-4, 1e-3, 1e-2], ['0.01%', '0.1%', '1%'])
 plt.yticks([1e-3, 1e-2, 1e-1, 1], ['0.1%', '1%', '10%', '100%'])
 plt.hlines(7/712, 1e-5, 2e-2, linestyles=['--'], color='gray')
 plt.text(2e-2, 7/712, 'Diamond Princess', ha='right', va='bottom', size=6)
+adjust_text(atexts)
 plt.ylim(1e-3, 0.2)
 plt.xlim(1e-5, 2e-2)
-adjust_text(atexts)
 #plt.legend(loc='best', ncol=3, prop=dict(size=8))
 if use_all_countries:
 	plt.savefig('results/ratio.pdf', bbox_inches='tight')
