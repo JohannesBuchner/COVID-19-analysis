@@ -421,7 +421,7 @@ else:
 	plt.savefig('results/ratio_beds_some.png', bbox_inches='tight', dpi=120)
 plt.close()
 
-fig = plt.figure(figsize=(6, 13))
+fig = plt.figure(figsize=(8, 13))
 ax = plt.gca()
 #fig.patch.set_visible(False)
 #ax.axis('off')
