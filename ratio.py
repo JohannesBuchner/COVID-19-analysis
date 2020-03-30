@@ -90,10 +90,8 @@ a = plt.figure(figsize=(6, 7))
 ax = a.gca()
 b = plt.figure(figsize=(6, 7))
 bx = b.gca()
-c = plt.figure(figsize=(6, 7))
+c = plt.figure(figsize=(6, 10))
 cx = c.gca()
-d = plt.figure(figsize=(6, 7))
-dx = d.gca()
 
 use_all_countries = os.environ.get('COUNTRIES', 'all') == 'all'
 atexts = []
@@ -125,6 +123,8 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 	
 	delta_dead = timeseries_dead[7:] - timeseries_dead[:-7]
 	total_dead = timeseries_dead[7:]
+	delta_reported = timeseries_reported[7:] - timeseries_reported[:-7]
+	total_reported = timeseries_reported[7:]
 	
 	country = row1.name
 	pop_country = pop[pop["Country or Area"] == country_name_replacement.get(row1.name, row1.name)]
@@ -272,12 +272,14 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 			'  ' + country_brief, va='bottom', ha='center', size=6, rotation=90)
 
 	mask = np.logical_and(total_dead >= min_dead, delta_dead < total_dead)
-	x = total_dead[mask] / vulnerable_number.sum()
-	y = delta_dead[mask] / total_dead[mask]
+	y = total_dead[mask] / vulnerable_number.sum()
+	x = delta_dead[mask] / total_dead[mask]
+	y = total_reported[mask] / vulnerable_number.sum()
+	x = delta_reported[mask] / total_reported[mask]
 	marker = 'o-' if country_brief in marked_countries else 's-'
 	if mask.any():
 		l, = cx.plot(x[-1], y[-1], marker, ms=size, color=color)
-		ctexts.append(cx.text(x[-1], y[-1], country_brief, size=6, rotation=90))
+		ctexts.append(cx.text(x[-1], y[-1], country_brief, size=8 if country_brief in marked_countries else 6))
 		cx.plot(x, y, '-', ms=2, label=country_brief, alpha=0.2, color=color)
 
 
@@ -446,14 +448,13 @@ plt.sca(cx)
 cx.text(0.02, 0.98, "@JohannesBuchner (%s)" % datetime.now().strftime("%Y-%m-%d"), 
 	va='top', ha='left', transform=cx.transAxes, size=8, color="gray")
 
-plt.xlabel("Fraction deceased per vulnerable person")
-plt.ylabel('Fraction deceased in the last 7 days')
-plt.xscale('log')
-#plt.yscale('log')
+plt.ylabel("Fraction deceased per vulnerable person")
+plt.xlabel('Fraction deceased in the last 7 days')
+plt.yscale('log')
 cx.tick_params(axis='both', direction='inout', which='both', 
 	bottom=True, top=True, left=True, right=True,)
 	#labelbottom=True, labeltop=True, labelleft=True, labelright=True)
-plt.xlim(2e-7, 2e-3)
+#plt.ylim(2e-7, 2e-3)
 adjust_text(ctexts)
 if use_all_countries:
 	plt.savefig('results/ratio_expo.pdf', bbox_inches='tight')
