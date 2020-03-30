@@ -1,11 +1,17 @@
 COVID-19 analyses
 ============================
 
+I use three diagnostic plots to look at the progression. These answer
+the following questions:
 
-1. How do countries compare in testing and health care system stress? (see below)
+1. `How active and exponential is the spread? 
+   <https://github.com/JohannesBuchner/COVID-19-analysis/blob/master/activity.rst>`_
 
-2. `How stressed is the health care system of each country? When will it be exhausted? 
+2. How do countries compare in testing and health care system stress? (see below)
+
+3. `When will the health care system become exhausted? 
    <https://github.com/JohannesBuchner/COVID-19-analysis/blob/master/results/capacities.rst>`_
+
 
 Approach
 ---------
