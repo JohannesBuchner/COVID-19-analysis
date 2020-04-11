@@ -40,6 +40,9 @@ country_briefname_replacement = {
 	'Korea, South': 'South Korea',
 	'Republic of Korea': 'South Korea',
 }
+country_stringency_replacement = {
+	"US":'United States',
+}
 
 agegroups = [
  ['0 - 4', '5 - 9', '10 - 14',  '15 - 19'],
@@ -74,6 +77,8 @@ pop = pandas.concat([
 
 beds = pandas.read_csv('UNdata/UNdata_Export_hospitalbeds.csv')
 
+stringency = pandas.read_csv('stringency.csv')
+
 prop_cycle = plt.rcParams['axes.prop_cycle']
 colors = prop_cycle.by_key()['color'] * 100
 
@@ -92,11 +97,14 @@ b = plt.figure(figsize=(6, 7))
 bx = b.gca()
 c = plt.figure(figsize=(6, 10))
 cx = c.gca()
+s = plt.figure(figsize=(10, 10))
+sx = s.gca()
 
 use_all_countries = os.environ.get('COUNTRIES', 'all') == 'all'
 atexts = []
 btexts = []
 ctexts = []
+stexts = []
 capacities = []
 predictions = []
 #min_dead = 4
@@ -110,6 +118,9 @@ print()
 print("%20s %4s %6s %14s %s" % ("Country", "Beds", "Deaths", "Population", "Vulnerable fraction"))
 #for rows1, rows2 in zip(open(f1), open(f2)):
 for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
+	
+	# get date strings
+	timeseries_dates = row1.index[2:]
 	
 	timeseries_reported = np.array(row1[2:], dtype=int)
 	timeseries_dead = np.array(row2[2:], dtype=int)
@@ -157,6 +168,30 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 	beds_total = beds_recent * sum(num_people)
 	# corrected for vulnerability of the population
 	capacity = beds_total * sum(vulnerable_number) / sum(num_people)
+
+	# look up stringency time series
+	stringency_country = stringency[stringency.CountryName == row1.name]
+	for translator in country_stringency_replacement, country_name_replacement, country_briefname_replacement:
+		if len(stringency_country) == 0:
+			stringency_country = stringency[stringency.CountryName == translator.get(row1.name, row1.name)]
+	
+	has_stringency_data = len(stringency_country) > 0
+	if has_stringency_data:
+		#print(i, "mdystr:", mdystr)
+		timeseries_stringency = []
+		for v in timeseries_dates:
+			mask = np.array([v == '%d/%d/%d' % ((d//100)%100, d%100, (d//10000 % 100)) for d in stringency_country.Date])
+			#print(stringency_country.Date[mask], v)
+			if mask.sum() == 1:
+				timeseries_stringency.append(stringency_country.StringencyIndex[mask].iloc[0])
+			else:
+				timeseries_stringency.append(np.nan)
+			
+		timeseries_stringency = np.array(timeseries_stringency)
+		if not np.isfinite(timeseries_stringency).any():
+			print("  no valid stringency data for %s" % i)
+	else:
+		print("  no stringency data for %s" % i)
 	
 	print("%20s %6d %6d %14d %.2f%%" % (country, beds_recent * 100000, max(timeseries_dead), 
 		sum(num_people), sum(vulnerable_number) * 100 / sum(num_people)))
@@ -172,7 +207,8 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 			plt.plot(timeseries_reported - timeseries_recovered, 'o-')
 			lo, hi = 0, len(timeseries_reported) + 21
 			x = np.arange(len(timeseries_reported) - 7, hi)
-			logy_data = log(timeseries_reported - timeseries_recovered + 0.01)
+			with np.errstate(invalid='ignore'):
+				logy_data = log(timeseries_reported - timeseries_recovered + 0.01)
 			i0 = len(timeseries_reported) - 1
 			x0 = i0
 			logy0 = logy_data[i0]
@@ -282,6 +318,20 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 		ctexts.append(cx.text(x[-1], y[-1], country_brief, size=8 if country_brief in marked_countries else 6))
 		cx.plot(x, y, '-', ms=2, label=country_brief, alpha=0.2, color=color)
 
+	if has_stringency_data and total_reported[-14] > 1000 and timeseries_dead[-1] > 0:
+		#mask = timeseries_dead > 0
+		#timeseries_dead_running = timeseries_dead.copy()
+		#timeseries_dead_running[7:] -= timeseries_dead_running[:-7]
+		x = timeseries_dead[14:]
+		y = timeseries_stringency[:-14]
+		marker = 'o-' if country_brief in marked_countries else 's--'
+		if mask.any():
+			l, = sx.plot(x[-1], y[-1], marker, ms=size, color=color)
+			stexts.append(sx.text(x[-1], y[-1], country_brief, 
+				size=8 if country_brief in marked_countries else 6))
+			sx.plot(x, y, '-' if country_brief in marked_countries else '--', 
+				ms=2, label=country_brief, alpha=0.5, color=color)
+
 
 with open("results/capacities.rst", 'w') as f:
 	f.write("""
@@ -357,6 +407,7 @@ when the health system resources will be exhausted.
 
 """)
 
+print("plotting ratio ...")
 plt.sca(ax)
 ax.text(0.02, 1.0, """How to read this graph:
 The horizontal axis represents penetration of the population.
@@ -399,6 +450,7 @@ plt.close()
 
 #plt.plot([1e-6, 1e-3], [5e-6/1e-6, 5e-6/1e-3], ':', color='gray', alpha=0.5)
 
+print("plotting beds ...")
 plt.sca(bx)
 bx.text(0.98, 0.98, "@JohannesBuchner (%s)" % datetime.now().strftime("%Y-%m-%d"), va='top', ha='right',
 	transform=bx.transAxes, size=8, color="gray")
@@ -444,6 +496,7 @@ plt.close()
 
 
 
+print("plotting expo ...")
 plt.sca(cx)
 cx.text(0.02, 0.98, "@JohannesBuchner (%s)" % datetime.now().strftime("%Y-%m-%d"), 
 	va='top', ha='left', transform=cx.transAxes, size=8, color="gray")
@@ -466,6 +519,32 @@ plt.close()
 
 
 
+print("plotting stringency ...")
+plt.sca(sx)
+sx.text(0.02, 0.98, "@JohannesBuchner (%s)" % datetime.now().strftime("%Y-%m-%d"), 
+	va='top', ha='left', transform=sx.transAxes, size=8, color="gray")
+
+plt.xlabel("Number deceased")
+plt.ylabel('Stringency Index of Measures 14 days earlier')
+plt.xscale('log')
+sx.tick_params(axis='both', direction='inout', which='both', 
+	bottom=True, top=True, left=True, right=True,)
+	#labelbottom=True, labeltop=True, labelleft=True, labelright=True)
+#plt.ylim(2e-7, 2e-3)
+#plt.xlim(1e-6, 0.8e-2)
+adjust_text(stexts)
+plt.legend(loc='best', prop=dict(size=8))
+if use_all_countries:
+	plt.savefig('results/ratio_stringency.pdf', bbox_inches='tight')
+	plt.savefig('results/ratio_stringency.png', bbox_inches='tight', dpi=120)
+else:
+	plt.savefig('results/ratio_stringency_some.pdf', bbox_inches='tight')
+	plt.savefig('results/ratio_stringency_some.png', bbox_inches='tight', dpi=120)
+plt.close()
+
+
+
+print("plotting predictions ...")
 fig = plt.figure(figsize=(8, 13))
 ax = plt.gca()
 #fig.patch.set_visible(False)
