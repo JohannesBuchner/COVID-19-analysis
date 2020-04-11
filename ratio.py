@@ -244,7 +244,7 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 			plt.hlines(capacity, 0, hi)
 			plt.text(0, capacity, '  Health care system capacity', 
 				ha='left', va='bottom', size=8)
-			plt.ylim(1, capacity * 5)
+			plt.ylim(1, capacity * 20)
 			plt.xlim(0, None)
 			plt.ylabel("Number of infected - recovered")
 			plt.xlabel("Days since %s" % (dates[0]).strftime('%Y-%m-%d'))
