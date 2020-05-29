@@ -24,72 +24,75 @@ Top stressed countries
  Country             Capacity 
 ==================  ===========
 Peru                    2117
-Saudi Arabia            1819
-Chile                   2213
 Guatemala                116
-Pakistan                1911
+Chile                   2213
+Saudi Arabia            1819
 Bangladesh              1301
-Singapore                909
-Dominican Republic          563
-Brazil                 20357
-Honduras                 196
-Bolivia                  388
+Pakistan                1911
 Ecuador                  822
-Iran                    5312
+Bolivia                  388
+Honduras                 196
+Brazil                 20357
+Dominican Republic          563
+Singapore                909
 Panama                   455
-Ghana                    618
-US                     82300
-Sweden                  2739
-UK                     20008
+Nicaragua                105
+Iran                    5312
+Armenia                  696
+Cameroon                 466
 Sudan                    513
 Mexico                  9094
-Armenia                  696
+US                     82300
+Sweden                  2739
 El Salvador              269
-Cameroon                 466
+UK                     20008
 Colombia                3079
+South Africa            4870
+Nigeria                 1361
+Ghana                    618
+Philippines             1592
+Tajikistan               973
 Turkey                  8376
 Spain                  14596
-Nigeria                 1361
-Philippines             1592
-Nicaragua                105
-South Africa            4870
-Canada                 10677
-Paraguay                 195
-Belgium                 7042
-Italy                  24259
-Tajikistan               973
-Morocco                 1072
-Indonesia               4681
-Algeria                 1837
-India                  37234
 Egypt                   4454
-Zambia                   434
+India                  37234
+Indonesia               4681
+Canada                 10677
+Belgium                 7042
+Algeria                 1837
+Italy                  24259
 Belarus                 8646
-Russia                106190
 Portugal                3614
-Netherlands             7734
-Burkina Faso             116
-Ireland                 3488
+Russia                106190
 Yemen                    213
-France                 44063
-Uganda                   298
+Morocco                 1072
+Burkina Faso             116
+Netherlands             7734
 Kenya                    931
-Bosnia and Herzegovina          928
-Jordan                   415
-Azerbaijan              3386
-Denmark                 3915
-Kyrgyzstan              1018
-Kazakhstan              6429
-Costa Rica               367
-Romania                11963
+Zambia                   434
+France                 44063
+Paraguay                 195
+Ireland                 3488
 Argentina              12176
+Kazakhstan              6429
+Azerbaijan              3386
+Venezuela               1583
+Uganda                   298
+Kyrgyzstan              1018
+Costa Rica               367
 Lebanon                  658
-Israel                  1819
-Norway                  1510
-Serbia                  3797
-Finland                 3560
+Mozambique               270
+Bosnia and Herzegovina          928
 Malaysia                2256
+Albania                  579
+Jordan                   415
 Uruguay                  306
+Denmark                 3915
+Israel                  1819
+Romania                11963
+Serbia                  3797
+Zimbabwe                 380
+Malawi                   472
 ==================  ===========
 
 
@@ -105,14 +108,14 @@ This extrapolated from the day-to-day doubling times from the last 4 days.
 ==================  ===========  ======================   ======
  Country             Capacity     Predicted Exhaustion     Fit
 ==================  ===========  ======================   ======
-Albania                  579      
+Albania                  579      Jun 06 - Jun 19          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Albania.png>`_
 Algeria                 1837      Apr 25 - Apr 25          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Algeria.png>`_
 Angola                   348      
-Argentina              12176      Jun 02 - Jun 08          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Argentina.png>`_
+Argentina              12176      Jun 04 - Jun 06          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Argentina.png>`_
 Armenia                  696      Apr 25 - Apr 25          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Armenia.png>`_
 Australia               7665      
 Austria                 6543      Mar 26 - Mar 26          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Austria.png>`_
-Azerbaijan              3386      Jun 07 - Jun 11          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Azerbaijan.png>`_
+Azerbaijan              3386      Jun 07 - Jun 19          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Azerbaijan.png>`_
 Bangladesh              1301      Apr 16 - Apr 16          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Bangladesh.png>`_
 Belarus                 8646      Apr 28 - Apr 28          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Belarus.png>`_
 Belgium                 7042      Mar 28 - Mar 28          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Belgium.png>`_
@@ -156,22 +159,22 @@ Ireland                 3488      Apr 03 - Apr 03          `Trend <https://raw.g
 Israel                  1819      Mar 25 - Mar 25          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Israel.png>`_
 Italy                  24259      Mar 15 - Mar 15          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Italy.png>`_
 Japan                 221225      
-Jordan                   415      May 27 - May 30          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Jordan.png>`_
-Kazakhstan              6429      
-Kenya                    931      
+Jordan                   415      
+Kazakhstan              6429      Jun 07 - Jun 19          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Kazakhstan.png>`_
+Kenya                    931      May 29 - May 29          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Kenya.png>`_
 South Korea            43812      
-Kyrgyzstan              1018      
+Kyrgyzstan              1018      Jun 04 - Jun 18          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Kyrgyzstan.png>`_
 Latvia                  1253      
-Lebanon                  658      May 31 - Jun 11          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Lebanon.png>`_
-Libya                    467      
+Lebanon                  658      
+Libya                    467      May 31 - Jun 15          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Libya.png>`_
 Lithuania               1916      
 Malawi                   472      
 Malaysia                2256      Apr 02 - Apr 02          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Malaysia.png>`_
 Mali                      26      Mar 31 - Mar 31          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Mali.png>`_
 Mexico                  9094      Apr 23 - Apr 23          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Mexico.png>`_
 Morocco                 1072      Apr 07 - Apr 07          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Morocco.png>`_
-Mozambique               270      May 29 - Jun 11          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Mozambique.png>`_
-Nepal                   4280      
+Mozambique               270      
+Nepal                   4280      Jun 05 - Jun 19          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Nepal.png>`_
 Netherlands             7734      Mar 27 - Mar 27          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Netherlands.png>`_
 New Zealand              869      Apr 04 - Apr 04          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/New%20Zealand.png>`_
 Nicaragua                105      May 19 - May 19          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Nicaragua.png>`_
@@ -197,7 +200,7 @@ Slovakia                2937
 Slovenia                 949      
 South Africa            4870      May 09 - May 09          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/South%20Africa.png>`_
 Spain                  14596      Mar 19 - Mar 19          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Spain.png>`_
-Sri Lanka               3096      
+Sri Lanka               3096      Jun 03 - Jun 16          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Sri%20Lanka.png>`_
 Sudan                    513      May 01 - May 01          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Sudan.png>`_
 Sweden                  2739      Mar 29 - Mar 29          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Sweden.png>`_
 Switzerland             8375      Mar 23 - Mar 23          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Switzerland.png>`_
@@ -207,16 +210,16 @@ Togo                      80      May 10 - May 10          `Trend <https://raw.g
 Tunisia                  943      
 Turkey                  8376      Mar 29 - Mar 29          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Turkey.png>`_
 US                     82300      Mar 26 - Mar 26          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/US.png>`_
-Uganda                   298      May 27 - Jun 11          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Uganda.png>`_
+Uganda                   298      Jun 01 - Jun 04          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Uganda.png>`_
 Ukraine                31943      
 UK                     20008      Mar 30 - Mar 30          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/UK.png>`_
 Uruguay                  306      
 Uzbekistan              4504      
-Venezuela               1583      May 24 - May 30          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Venezuela.png>`_
+Venezuela               1583      Jun 08 - Jun 12          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Venezuela.png>`_
 Vietnam                13222      
-Yemen                    213      May 21 - May 30          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Yemen.png>`_
+Yemen                    213      May 25 - May 25          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Yemen.png>`_
 Zambia                   434      May 14 - May 14          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Zambia.png>`_
-Zimbabwe                 380      
+Zimbabwe                 380      May 29 - Jun 19          `Trend <https://raw.githubusercontent.com/JohannesBuchner/COVID-19-analysis/master/results/Zimbabwe.png>`_
 ==================  ===========  ======================   ======
 
 Visualisation
