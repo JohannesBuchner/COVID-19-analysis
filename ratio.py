@@ -7,6 +7,7 @@ from adjustText import adjust_text
 from numpy import log, exp
 import urllib
 import locale
+import scipy.signal
 
 locale.setlocale(locale.LC_ALL, "en_US.utf8")
 
@@ -204,9 +205,12 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 		if country_brief in marked_countries_colors or use_all_countries:
 			plt.figure()
 			plt.title(country)
-			smoothed_new_cases = scipy.signal.convolve(timeseries_reported[1:] - timeseries_reported[:-1], np.ones(21))
-			
 			plt.plot(timeseries_reported - timeseries_recovered, 'o-')
+
+			smoothed_new_cases = scipy.signal.convolve(
+				timeseries_reported[1:] - timeseries_reported[:-1],
+				np.ones(28), mode='valid')
+			plt.plot(np.arange(len(smoothed_new_cases))+28, smoothed_new_cases, '-', alpha=0.5, color='r')
 			lo, hi = 0, len(timeseries_reported) + 21
 			x = np.arange(len(timeseries_reported) - 7, hi)
 			with np.errstate(invalid='ignore'):
@@ -246,6 +250,10 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 			plt.hlines(capacity, 0, hi)
 			plt.text(0, capacity, '  Health care system capacity', 
 				ha='left', va='bottom', size=8)
+			min_num = min(500, 3. / 100000 * sum(num_people))
+			plt.hlines(min_num, 0, hi, color='r')
+			plt.text(0, min_num, '  CDC high risk', ha='left', va='bottom', size=8, color='r')
+
 			plt.ylim(1, capacity * 20)
 			plt.xlim(0, None)
 			plt.ylabel("Number of infected - recovered")
@@ -438,7 +446,7 @@ plt.yticks([1e-3, 1e-2, 1e-1, 1], ['0.1%', '1%', '10%', '100%'])
 plt.hlines(7/712, 1e-5, 2e-2, linestyles=['--'], color='gray')
 plt.text(2e-2, 7/712, 'Diamond Princess', ha='right', va='bottom', size=6)
 plt.ylim(1e-3, 0.2)
-plt.xlim(1e-5, 2e-2)
+plt.xlim(1e-5, 1e-1)
 #ax.update_datalim(list(zip(plt.xlim(), plt.ylim())))
 #adjust_text(atexts)
 #plt.legend(loc='best', ncol=3, prop=dict(size=8))
