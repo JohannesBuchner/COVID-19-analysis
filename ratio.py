@@ -250,7 +250,11 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 			plt.hlines(capacity, 0, hi)
 			plt.text(0, capacity, '  Health care system capacity', 
 				ha='left', va='bottom', size=8)
-			min_num = min(500, 3. / 100000 * sum(num_people))
+			# CDC high risk level:
+			# https://www.cdc.gov/coronavirus/2019-ncov/travelers/how-level-is-determined.html
+			min_num = 500
+			if sum(num_people) >= 300000:
+				min_num = min(min_num, 3. / 100000 * sum(num_people))
 			plt.hlines(min_num, 0, hi, color='r')
 			plt.text(0, min_num, '  CDC high risk', ha='left', va='bottom', size=8, color='r')
 
