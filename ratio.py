@@ -464,51 +464,6 @@ plt.close()
 
 #plt.plot([1e-6, 1e-3], [5e-6/1e-6, 5e-6/1e-3], ':', color='gray', alpha=0.5)
 
-print("plotting beds ...")
-plt.sca(bx)
-bx.text(0.98, 0.98, "@JohannesBuchner (%s)" % datetime.now().strftime("%Y-%m-%d"), va='top', ha='right',
-	transform=bx.transAxes, size=8, color="gray")
-
-bx.text(0.02, 1.0, """How to read this graph:
-The horizontal axis represents stress on the health care system.
-The vertical axis indicates under-reporting of infections
-(compare to Diamond Princess and South Korea).
-Deaths (rare!) occur after a delay. For example, in China and 
-South Korea, deaths keep increasing after no new infections.
-
-Definitions:
-Vulnerable population = Country demographic age groups multiplied 
-by their relative mortality (taken from Riou et al. 2020).
-# of infected = confirmed cases - recovered cases
-""", va='bottom', ha='left', transform=bx.transAxes, size=10)
-plt.xlabel("# of Infected / Vulnerable Population / # hospital beds per person")
-plt.ylabel('# of Deaths / # of Confirmed cases')
-plt.xscale('log')
-plt.yscale('log')
-bx.tick_params(axis='both', direction='inout', which='both', 
-	bottom=True, top=True, left=True, right=True,)
-	#labelbottom=True, labeltop=True, labelleft=True, labelright=True)
-plt.xticks([1e-2, 1e-1, 1], ['1%', '10%', '100%'])
-plt.yticks([1e-3, 1e-2, 1e-1, 1], ['0.1%', '1%', '10%', '100%'])
-plt.hlines(7/712, 1e-3, 8, linestyles=['--'], color='gray')
-plt.text(8, 7/712, 'Diamond Princess', ha='right', va='bottom', size=6)
-plt.ylim(1e-3, 0.2)
-plt.xlim(1e-3, 8)
-bx.fill_between([1.0, 8], [1e-3, 1e-3], [0.2, 0.2], color='yellow', alpha=0.05)
-bx.fill_between([1.2, 8], [1e-3, 1e-3], [0.2, 0.2], color='yellow', alpha=0.05)
-bx.fill_between([1.2**2, 8], [1e-3, 1e-3], [0.2, 0.2], color='yellow', alpha=0.05)
-adjust_text(btexts)
-#plt.legend(loc='best', ncol=3, prop=dict(size=8))
-if use_all_countries:
-	plt.savefig('results/ratio_beds.pdf', bbox_inches='tight')
-	plt.savefig('results/ratio_beds.png', bbox_inches='tight', dpi=120)
-else:
-	plt.savefig('results/ratio_beds_some.pdf', bbox_inches='tight')
-	plt.savefig('results/ratio_beds_some.png', bbox_inches='tight', dpi=120)
-plt.close()
-
-
-
 
 print("plotting expo ...")
 plt.sca(cx)
@@ -613,4 +568,47 @@ else:
 	plt.savefig('results/predictions_some.pdf', bbox_inches='tight')
 	plt.savefig('results/predictions_some.png', bbox_inches='tight', dpi=120)
 
+plt.close()
+
+print("plotting beds ...")
+plt.sca(bx)
+bx.text(0.98, 0.98, "@JohannesBuchner (%s)" % datetime.now().strftime("%Y-%m-%d"), va='top', ha='right',
+	transform=bx.transAxes, size=8, color="gray")
+
+bx.text(0.02, 1.0, """How to read this graph:
+The horizontal axis represents stress on the health care system.
+The vertical axis indicates under-reporting of infections
+(compare to Diamond Princess and South Korea).
+Deaths (rare!) occur after a delay. For example, in China and 
+South Korea, deaths keep increasing after no new infections.
+
+Definitions:
+Vulnerable population = Country demographic age groups multiplied 
+by their relative mortality (taken from Riou et al. 2020).
+# of infected = confirmed cases - recovered cases
+""", va='bottom', ha='left', transform=bx.transAxes, size=10)
+plt.xlabel("# of Infected / Vulnerable Population / # hospital beds per person")
+plt.ylabel('# of Deaths / # of Confirmed cases')
+plt.xscale('log')
+plt.yscale('log')
+bx.tick_params(axis='both', direction='inout', which='both', 
+	bottom=True, top=True, left=True, right=True,)
+	#labelbottom=True, labeltop=True, labelleft=True, labelright=True)
+plt.xticks([1e-2, 1e-1, 1], ['1%', '10%', '100%'])
+plt.yticks([1e-3, 1e-2, 1e-1, 1], ['0.1%', '1%', '10%', '100%'])
+plt.hlines(7/712, 1e-3, 8, linestyles=['--'], color='gray')
+plt.text(8, 7/712, 'Diamond Princess', ha='right', va='bottom', size=6)
+plt.ylim(1e-3, 0.2)
+plt.xlim(1e-3, 8)
+bx.fill_between([1.0, 8], [1e-3, 1e-3], [0.2, 0.2], color='yellow', alpha=0.05)
+bx.fill_between([1.2, 8], [1e-3, 1e-3], [0.2, 0.2], color='yellow', alpha=0.05)
+bx.fill_between([1.2**2, 8], [1e-3, 1e-3], [0.2, 0.2], color='yellow', alpha=0.05)
+adjust_text(btexts)
+#plt.legend(loc='best', ncol=3, prop=dict(size=8))
+if use_all_countries:
+	plt.savefig('results/ratio_beds.pdf', bbox_inches='tight')
+	plt.savefig('results/ratio_beds.png', bbox_inches='tight', dpi=120)
+else:
+	plt.savefig('results/ratio_beds_some.pdf', bbox_inches='tight')
+	plt.savefig('results/ratio_beds_some.png', bbox_inches='tight', dpi=120)
 plt.close()
