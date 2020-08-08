@@ -204,6 +204,8 @@ for (i, row1), (_, row2) in zip(d1.iterrows(), d2.iterrows()):
 		if country_brief in marked_countries_colors or use_all_countries:
 			plt.figure()
 			plt.title(country)
+			smoothed_new_cases = scipy.signal.convolve(timeseries_reported[1:] - timeseries_reported[:-1], np.ones(21))
+			
 			plt.plot(timeseries_reported - timeseries_recovered, 'o-')
 			lo, hi = 0, len(timeseries_reported) + 21
 			x = np.arange(len(timeseries_reported) - 7, hi)
@@ -600,4 +602,3 @@ else:
 	plt.savefig('results/predictions_some.png', bbox_inches='tight', dpi=120)
 
 plt.close()
-
