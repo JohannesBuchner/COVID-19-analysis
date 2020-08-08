@@ -12,6 +12,7 @@ the following questions:
 3. `When will the health care system become exhausted? 
    <https://github.com/JohannesBuchner/COVID-19-analysis/blob/master/results/capacities.rst>`_
 
+4. When will the CDC reduce the countries' "high risk" level?
 
 Approach
 ---------
